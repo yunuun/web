@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>植物觀察站</title>
+<style>
+body{
+    font-family: "Comic Sans MS", "標楷體", sans-serif;
+    background-color:rgb(238, 231, 228);
+    margin: 0;
+    padding: 20px;
+    color: rgb(78, 52, 46);
+    height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.main{
+    width: 95%;
+    max-width: 1200px;
+    height: 90vh;
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
+}
+.sidebar{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: 100%;
+}
+.data-panel{
+    background: rgb(255, 252, 236);
+    border-radius: 10px;
+    height: 300px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+}
+.data-item{
+    text-align: center;
+    border-right: 2px dotted rgb(254, 200, 113);
+    border-bottom: 2px dotted rgb(254, 200, 113);
+    padding-bottom: 15px;
+}
+.data-item:nth-child(2n){ border-right: none; }
+.data-item:nth-child(5){ border-bottom: none; }
+.data-item:last-child{ border-bottom: none; }
+.data-val{ 
+    font-size: 1.5em; 
+    font-weight: bold; 
+    color: rgb(255, 192, 44); 
+}
+.data-label{ 
+    padding-top: 20px; 
+    padding-bottom: 6px; 
+    font-size: 0.9em; 
+    color: rgb(110, 77, 65); 
+}
+.notebook{
+    background-color: rgb(253, 251, 247);
+    background-image: linear-gradient(rgb(224, 224, 224) 1px, transparent 1px);
+    background-size: 100% 30px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 10;
+}
+header{
+    text-align: center;
+    margin-top: 15px;
+    margin-bottom: 30px;
+    background: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    padding: 10px 30px;
+    border: 2px dashed rgb(141, 110, 99);
+    transform: rotate(-1deg);
+    width: 70%;
+    margin-left: 13%;
+}
+h1{
+    margin: 0;
+    color: rgb(93, 64, 55);
+}
+.date{
+    display: block;
+    margin-top: 5px;
+    font-size: 0.9em;
+    color: rgb(141, 110, 99);
+}
+.cloud{
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    cursor: pointer; 
+}
+.polaroid{
+    background: rgb(255, 255, 255);
+    padding: 10px 10px 30px 10px;
+    text-align: center;
+    transform: rotate(-1deg);
+    margin-left: 70px;
+    margin-top: 20px;
+    width: 75%;
+    height: 250px;
+    box-sizing: border-box;
+}
+#preview-image{
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+.tape{
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 30px;
+    background-color: rgba(255, 208, 120, 0.4);
+}
+.picture{
+    background: rgb(255, 255, 255);
+    border: 1px solid rgb(215, 214, 214);
+    text-align: center;
+    margin-left: 18px;
+    margin-top: 13px;
+    width: 90%;
+    height: 180px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+.picture:hover{
+    background: rgb(215, 214, 214);
+}
+.picture-hint {
+    top: 40%;
+    left:35%;
+    position: absolute;
+    z-index: 10;
+    color: rgb(141, 110, 99);
+}
+.question-box{
+    background: rgb(255, 255, 255);
+    border: 1.5px solid #eee7e4c9;
+    border-radius: 5px 5px 5px 5px;
+    margin-left: 95px;
+    width: 70%;
+    height: 140px;
+    padding: 20px 10px 10px 10px;
+    box-sizing: border-box;
+    display: flex;
+    transform: rotate(1deg);
+}
+.question{
+    background: rgb(255, 255, 255);
+    border: 1px solid rgb(215, 214, 214);
+    width: 80%;
+    height: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: none;
+    color: rgb(141, 110, 99);
+}
+.submit{
+    width: 50px;        
+    height: 50px;    
+    border-radius: 50%; 
+    background-color: rgb(255, 255, 255); 
+    color: rgba(255, 208, 120, 0.579);
+    font-size: 2em;      
+    border: none;      
+    cursor: pointer;   
+    display: flex;     
+    justify-content: center;
+    align-items: center;
+    margin-left: 7px;
+    margin-top: 35px;
+}
+.submit:hover{
+    background: rgba(252, 235, 227, 0.788);
+}
+.container{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    width: 100%;
+}
+.left{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    flex: 1;
+}
+.right{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.answer-box{
+    background: rgb(255, 255, 255);
+    border: 1.5px solid #eee7e4c9;
+    border-radius: 5px 5px 5px 5px;
+    width: 80%;
+    height: 95%;
+    margin-top: 20px;
+    box-sizing: border-box;
+    display: flex;
+    transform: rotate(1deg);
+}
+.answer{
+    padding: 10px;
+    width: 80%;
+    height: 360px;
+    margin-left: 25px;
+    margin-top: 20px;
+    color: rgb(141, 110, 99);
+    overflow: auto;
+}
+.advice{
+    background: rgb(255, 252, 236);
+    border: 2px dashed rgb(254, 200, 113);
+    border-radius: 20px;
+    padding: 15px;
+    text-align: center;
+    color: rgb(110, 77, 65);
+    bottom: 240px;
+    left: 90px;
+    position: absolute;
+    z-index: 1000;
+    display: none;
+}
+#model-display{
+    position: fixed; 
+    bottom: 5px;       
+    left: 25px;         
+    z-index: 1000;      
+    width: 300px;       
+    
+    background-color: transparent; 
+    border: none;                 
+    border-radius: 0;             
+    padding: 0;                
+    box-shadow: none;
+    cursor: pointer;
+    display: none;           
+}
+#model2-display{
+    position: absolute; 
+    top: 10px;       
+    right: 10px;         
+    z-index: 5;      
+    width: 300px;
+      
+    
+    background-color: transparent; 
+    border: none;                 
+    border-radius: 0;             
+    padding: 0;                
+    box-shadow: none;
+    cursor: pointer; 
+    display: block;      
+}
+model-viewer{
+    width: 100%;
+    height: 250px;
+    margin: 0;
+    border: none;
+    background-color: transparent;
+    border-radius: 8px;
+    pointer-events: none; 
+}
+
+</style>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+</head>
+<body>
+<div class="main">    
+    <div class="sidebar">
+        <div class="data-panel">
+            <div class="data-item">
+                <div class="data-label">空氣溫度 °C</div>
+                <div class="data-val">26</div>
+            </div>
+            <div class="data-item">
+                <div class="data-label">氮 %</div>
+                <div class="data-val">50</div>                    
+            </div>
+            <div class="data-item">
+                <div class="data-label">土壤濕度 %</div>
+                <div class="data-val">50</div>
+            </div>
+            <div class="data-item">
+                <div class="data-label">磷 %</div>
+                <div class="data-val">50</div>                    
+            </div>
+            <div class="data-item">
+                <div class="data-label">光照度 lx</div>
+                <div class="data-val">50</div>                    
+            </div>
+            <div class="data-item">
+                <div class="data-label">鉀 %</div>
+                <div class="data-val">50</div>                    
+            </div>
+        </div>
+    </div>
+    <div class="notebook">
+        <header>
+            <h1>🪴 植物的觀察日記</h1>
+            <span class="date" id="current-date">日期：載入中...</span>
+            <a href="https://drive.google.com/" target="_blank" class="cloud" title="前往雲端相簿">
+                <img src="cloudy.png" alt="雲端相簿圖示" width="80" height="80">
+            </a>
+        </header>
+        <div class="container">
+            <div class="left">
+                <label for="file-upload" class="polaroid">
+                    <div class="tape"></div>
+                    <div class="picture">
+                        <span class="picture-hint">點擊上傳圖片!</span>
+                        <img id="preview-image" src="" alt="預覽圖片">
+                        <input type="file" id="file-upload" accept="image/*" style="display: none;">
+                    </div>
+                </label>
+                <div class="question-box">
+                    <div class="tape"></div>
+                    <textarea class="question" placeholder="我發現了什麼?"></textarea>
+                    <button class="submit">⭡</button>
+                </div>
+            </div>
+            <div class="right">
+                <div class="answer-box">
+                    <div class="tape"></div>
+                    <div class="answer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<div class="advice">測試</div>
+<div id="model-display" onmouseover="changeadvice()">
+    <model-viewer
+      src="model3.glb"              alt="我的 3D 模型展示"           
+      shadow-intensity="1"            
+      camera-controls                 
+      camera-orbit="90deg 75deg 105%"
+      interaction-prompt="none"             
+      ar                              
+    ></model-viewer>
+</div>
+<div id="model2-display" onclick="switchmodel()">
+    <model-viewer
+      src="model4.glb"              alt="我的 3D 模型展示"           
+      shadow-intensity="1"            
+      camera-controls                 
+      camera-orbit="90deg 75deg 105%"
+      interaction-prompt="none"
+      orientation="0deg -45deg 0deg"           
+      ar  
+      ></model-viewer>      
+</div>
+
+<script>
+    const dateElement = document.getElementById('current-date');
+    const today = new Date();
+    dateElement.innerText = `日期：${today.getFullYear()} 年 ${today.getMonth() + 1} 月 ${today.getDate()} 日`;
+
+    const fileInput = document.getElementById('file-upload');
+    const previewImg = document.getElementById('preview-image');
+    const hint = document.querySelector('.picture-hint');
+    
+    fileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImg.src = e.target.result;
+                previewImg.style.display = 'block';
+                hint.style.display = 'none';
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    function switchmodel(){
+        const model1 = document.getElementById('model-display');
+        const model2 = document.getElementById('model2-display');
+        const advices = document.querySelector('.advice');
+
+        model1.style.display = 'block';
+        model2.style.display = 'none';
+        advices.style.display = 'block';
+    }
+    
+    function changeadvice(){
+        const model1 = document.getElementById('model-display');
+        const advice = document.querySelector('.advice');
+
+        advice.textContent = "更改後";
+    }
+
+
+</script>
+</html>

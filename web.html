@@ -143,6 +143,7 @@ h1{
     position: absolute;
     z-index: 10;
     color: rgb(141, 110, 99);
+    font-family: "Comic Sans MS", "標楷體", sans-serif;
 }
 .question-box{
     background: rgb(255, 255, 255);
@@ -165,6 +166,7 @@ h1{
     box-sizing: border-box;
     resize: none;
     color: rgb(141, 110, 99);
+    font-family: "Comic Sans MS", "標楷體", sans-serif;
 }
 .submit{
     width: 50px;        
@@ -365,26 +367,26 @@ model-viewer{
 </div>
 
 <script>
-    const dateElement = document.getElementById('current-date');
+    const dateelement = document.getElementById('current-date');
     const today = new Date();
-    dateElement.innerText = `日期：${today.getFullYear()} 年 ${today.getMonth() + 1} 月 ${today.getDate()} 日`;
+    dateelement.innerText = `日期：${today.getFullYear()} 年 ${today.getMonth() + 1} 月 ${today.getDate()} 日`;
 
-    const fileInput = document.getElementById('file-upload');
-    const previewImg = document.getElementById('preview-image');
+    const fileinput = document.getElementById('file-upload');
+    const previewimg = document.getElementById('preview-image');
     const hint = document.querySelector('.picture-hint');
     
-    fileInput.addEventListener('change', function(e) {
+    fileinput.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                previewImg.src = e.target.result;
-                previewImg.style.display = 'block';
+                previewimg.src = e.target.result;
+                previewimg.style.display = 'block';
                 hint.style.display = 'none';
             }
             reader.readAsDataURL(file);
         }
-    });
+    }); 
 
     function switchmodel(){
         const model1 = document.getElementById('model-display');
